@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'Sailec';
+    src: local('Sailec'), url(./fonts/Sailec\ Medium.ttf) format('truetype');
+  }
+  
+@font-face {
+      font-family: 'Lato';
+      font-weight: 900;
+      src: local('Sailec'), url(./fonts/Sailec\ Bold.ttf) format('truetype');
+  }
+  
+@font-face {
+      font-family: 'Lato';
+      font-weight: 900;
+      src: local('Sailec'), url(./fonts/Sailec\ Thin.ttf) format('truetype');
+  }
