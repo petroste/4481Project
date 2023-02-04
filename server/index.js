@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 8080;
 
 // import libs
 const http = require('http').Server(app);
 const cors = require('cors');
-const socketIO = require('socket.io')(http, {cors: {origin: "http://localhost:5000"}});
+const socketIO = require('socket.io')(http, {cors: {origin: "http://localhost:8080"}});
 
 socketIO.on('connection', (socket) => {
     console.log(`${socket.id} user just connected!`);
@@ -14,10 +14,10 @@ socketIO.on('connection', (socket) => {
     });  
 });
 
-app.get('/api', (req, res) => {
+app.post('/post', (req, res) => {
     res.json({
         message: 'Hello world',
     });
 });
 
-app.listen(PORT, () => {console.log(`Server listening on ${PORT}`);});
+app.listen(PORT, console.log(`Server listening on ${PORT}`));
