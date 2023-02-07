@@ -27,32 +27,38 @@ export default function Login() {
 
 
     const renderLoginData = (
-        <div className='login-form'>
-            <form onSubmit={handleSubmit}>
-                <div className='input-fields'>
-                    <label>Username</label>
-                    <input type='text' name='username' required />
-                    {renderErrMsg("username")}
-                </div>
-                <div className='input-fields'>
-                    <label>Password</label>
-                    <input type='password' name='password' required />
-                    {renderErrMsg("password")}
-                </div>
-                <div className='submit-button'>
-                    <input type="submit"/>
-                </div>
-            </form>
-        </div>
+        
+        <>
+            <div className='login-page-title'>Chat Agent Sign In</div>
+            <div className='login-form'>
+                <form onSubmit={handleSubmit}>
+                    <div className='input-fields'>
+                        <label>Username</label>
+                        <input type='text' name='username' required />
+                        {renderErrMsg("username")}
+                    </div>
+                    <div className='input-fields'>
+                        <label>Password</label>
+                        <input type='password' name='password' required />
+                        {renderErrMsg("password")}
+                    </div>
+                    <div className='submit-button'>
+                        <input type="submit"/>
+                    </div>
+                </form>
+            </div>
+        </>
+
     );
 
   return (
     <div className='page'>
-        <div className='login-page'>
-            <div className='login-page-title'>Chat Agent Sign In</div>
+    <div className='login-page'>       
             {/* Here add redirection to user agent's page when successfully logged in */}
+            <div>
             {isSubmitted ? <div>User is successfully logged in</div> : renderLoginData}
-    </div>
+            </div>
+        </div>
     </div>
 
   );

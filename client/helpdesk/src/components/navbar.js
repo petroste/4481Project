@@ -35,6 +35,7 @@ text-decoration: none;
 	color: #f5c229;
 }
 &:hover {
+	color: #000000;
     background: #f5c229;
 }
 `
@@ -97,7 +98,7 @@ margin-left: 24px;
 	color: #808080;
 }
 &.active {
-    color: #808080;
+    color: #000000;
 }
 `
 ;
