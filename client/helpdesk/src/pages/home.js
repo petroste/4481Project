@@ -13,7 +13,7 @@ export default function Login() {
     //e.preventDefault();
     //alert("User successfully logged in");
     // pass the info to the back end
-    setIsSubmitted(true);
+    //setIsSubmitted(true);
     let path = `/tempchat`; 
     navigate(path);
     // query against the db

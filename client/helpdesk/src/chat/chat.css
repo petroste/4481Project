@@ -43,10 +43,10 @@
 }
 .chat__sidebar {
   height: 100%;
-  background-color: #f9f5eb;
+  background-color: #f5c229;
   flex: 0.2;
   padding: 20px;
-  border-right: 1px solid #fdfdfd;
+  border-right: 1px solid #f5c229;
 }
 .chat__main {
   height: 100%;

@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
-import App from '../App';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import authContext from '../authContext';
 import '../components/login.css';
 
 export default function Login() {
-
+    const navigate = useNavigate();
     const [errMsgs, setErrMsgs] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const {setAuthenticated} = useContext(authContext);
 
     const err = {
         username: "Invalid username! Please enter a correct username.",
@@ -17,9 +19,11 @@ export default function Login() {
         (<div className='error'>{errMsgs.msg}</div>);
 
     const handleSubmit = (e) => {
-        //e.preventDefault();
+        e.preventDefault();
         //alert("User successfully logged in");
         setIsSubmitted(true);
+        setAuthenticated(true);
+        navigate('/tempchat');
         // pass the info to the back end
         // query against the db
         // setErrMsgs() when username/pw incorrect
@@ -56,7 +60,7 @@ export default function Login() {
     <div className='login-page'>       
             {/* Here add redirection to user agent's page when successfully logged in */}
             <div>
-            {isSubmitted ? <div>User is successfully logged in</div> : renderLoginData}
+            {isSubmitted ? handleSubmit : renderLoginData}
             </div>
         </div>
     </div>
