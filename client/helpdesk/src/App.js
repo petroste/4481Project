@@ -7,6 +7,8 @@ import Login from './pages/login.js';
 import Chat from './pages/tempchat.js';
 import './App.css';
 import authContext from "./authContext";
+import socketIO from 'socket.io-client';
+const socket = socketIO.connect('http://localhost:4000');
 
 
 function App() {
@@ -17,10 +19,10 @@ function App() {
           <BrowserRouter>
             <Navbar />
             <Routes>
-              <Route path='/home' exact element={<Home />} />
+              <Route path='/home' exact element={<Home socket={socket}/>} />
               <Route path='/about' element={<About />} />
               <Route path='/login' element={<Login />} />
-              <Route path='/tempchat' element={<Chat />} />
+              <Route path='/tempchat' element={<Chat socket={socket} />} />
             </Routes>
           </BrowserRouter>  
         </authContext.Provider>

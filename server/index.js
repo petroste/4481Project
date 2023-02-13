@@ -1,23 +1,44 @@
+//index.js
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = 4000;
 
-// import libs
 const http = require('http').Server(app);
 const cors = require('cors');
-const socketIO = require('socket.io')(http, {cors: {origin: "http://localhost:8080"}});
 
-socketIO.on('connection', (socket) => {
-    console.log(`${socket.id} user just connected!`);
-    socket.on('disconnect', () => {
-    console.log('A user disconnected');
-    });  
+app.use(cors());
+let users = [];
+const socketIO = require('socket.io')(http, {
+    cors: {
+        origin: "http://localhost:3000"
+    }
 });
 
-app.post('/post', (req, res) => {
-    res.json({
-        message: 'Hello world',
+socketIO.on('connection', (socket) => {
+    console.log(`⚡: ${socket.id} user just connected!`);
+    
+    socket.on('message', (data) => {
+        console.log(data);
+        socketIO.emit('messageResponse', data);
+    });
+    socket.on('newUser', (data) => {
+        users.push(data);
+        socketIO.emit('newUserResponse', users);
+    })
+    socket.on('disconnect', () => {
+      console.log('🔥: A user disconnected');
+      users = users.filter((user) => user.socketID !== socket.id);
+      socketIO.emit('newUserResponse', users);
+      socket.disconnect();
     });
 });
 
-app.listen(PORT, console.log(`Server listening on ${PORT}`));
+app.get('/api', (req, res) => {
+  res.json({
+    message: 'Hello world',
+  });
+});
+
+http.listen(PORT, () => {
+  console.log(`Server listening on ${PORT}`);
+});

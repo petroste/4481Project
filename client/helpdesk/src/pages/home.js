@@ -1,33 +1,29 @@
-import React, { Component, useState } from 'react'
-import { useNavigate } from "react-router-dom";
-import App from '../App';
-import '../components/login.css';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-//Login the user
-export default function Login() {
-
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  let navigate = useNavigate(); 
+const Home = ({socket}) => {
+  const navigate = useNavigate();
+  const [userName, setUserName] = useState('');
 
   const handleSubmit = (e) => {
-    //e.preventDefault();
-    //alert("User successfully logged in");
-    // pass the info to the back end
-    //setIsSubmitted(true);
-    let path = `/tempchat`; 
-    navigate(path);
-    // query against the db
-    // setErrMsgs() when username/pw incorrect
+    e.preventDefault();
+    localStorage.setItem('userName', userName);
+    socket.emit('newUser', {userName, socketID: socket.id});
+    navigate('/tempchat');
   };
 
-  const renderStartChat = (
-    <>
-      <div className='login-page-title'>Begin Chat Session</div>
+  return (
+  <>
+  <div className='page'>
+    <div className='login-page-title'>Begin Chat Session</div>
       <div className='unauth-login-form'>
           <form onSubmit={handleSubmit}>
               <div className='input-fields'>
-                  <label>Name</label>
-                  <input type='text' name='username' required />
+                  <label htmlFor = "username">Name</label>
+                  <input type="text"
+                          minLength={6}
+                          value={userName}
+                          onChange={(e) => setUserName(e.target.value)} required />
                   
               </div>
               <div className='input-fields'>
@@ -40,16 +36,9 @@ export default function Login() {
               </div>
           </form>
       </div>
-    </>
-  );
-
-  return(
-    <div className='page'>
-      <div>
-      {renderStartChat}
-      </div>
     </div>
+  </>
   );
-}
+};
 
-
+export default Home;
