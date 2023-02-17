@@ -28,8 +28,8 @@ let users = new Map();
 io.on("connection", (socket) => {
   console.log("Client connected:", socket.id);
 
-//tamplate User identification, in Memeory, Can switch to Redis to maintain better perf and coherence 
-//Also Consider SQL DBs for Session Persistence
+  //tamplate User identification, in Memeory, Can switch to Redis to maintain better perf and coherence 
+  //Also Consider SQL DBs for Session Persistence
   socket.on("identify", (userId) => {
     console.log("User", userId, "identified as", socket.id);
 

@@ -1,23 +1,39 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
+import roles from '../enums';
 import "./chat.css"
 
-const ChatBar = ({socket}) => {
-  const [users, setUsers] = useState([]);
+const ChatBar = ({ socket, users, setUsers, setRecepient }) => {
 
   useEffect(() => {
-    socket.on('newUserResponse', (data) => setUsers(data));
-  }, [socket, users]);
-  
+    socket.on('users', (users) => {
+      users.forEach((user) => {
+        user.messages.forEach((message) => {
+          message.fromSelf = message.from === socket.userID;
+        });
+        user.self = user.userID === socket.userID;
+      });
+      setUsers(users)
+    })
+  }, [socket, users])
+
   return (
     <div className="chat__sidebar">
       <h2>Open Chat</h2>
 
       <div>
-        <h4 className="chat__header">ACTIVE USERS</h4>
+        {(socket.role === roles.AGENT) ? (<h4 className="chat__header">ACTIVE CUSTOMERS</h4>) : (<h4 className="chat__header">ACTIVE AGENTS</h4>)}
+
         <div className="chat__users">
-          {users.map((user) => (
-            <p key={user.socketID}>{user.userName}</p>
-          ))}
+          {(socket.role === roles.AGENT) ? (
+            users.map(user => (socket.userID !== user.userID) ?
+              (<button onClick={() => setRecepient(user)} key={user.userID}>{user.userName} | {user.role}</button>) : (<></>)
+            )
+          ) : (
+            users.map(user => (user.role === roles.AGENT) ?
+              (<button onClick={() => setRecepient(user)} key={user.userID}>{user.userName} | {user.role}</button>) : (<></>)
+            )
+          )}
+
         </div>
       </div>
     </div>

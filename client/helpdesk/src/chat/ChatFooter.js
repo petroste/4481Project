@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
+import { useResolvedPath } from 'react-router-dom';
 import "./chat.css"
 
-const ChatFooter = ({socket}) => {
-  const [message, setMessage] = useState('');
-
+const ChatFooter = ({ socket, recepient, users, setUsers, messages, setMessages }) => {
+  const [message, setMessage] = useState("")
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (message.trim() && localStorage.getItem('userName')) {
+    if (message.trim() && localStorage.getItem("userID")) {
       socket.emit('message', {
-        text: message,
-        name: localStorage.getItem('userName'),
-        id: `${socket.id}${Math.random()}`,
-        socketID: socket.id,
+        content: message,
+        to: recepient.userID
       });
+      users.forEach((user) => {
+        user.messages.push({
+          content: message,
+          fromSelf: true
+        })
+      })
+      setUsers(users)
+      setMessages([...messages, { content: message, from: socket.userID, to: recepient.userID }])
     }
-    // console.log({ userName: localStorage.getItem('userName'), message });
-    setMessage('');
   };
+
   return (
     <div className="chat__footer">
       <form className="form" onSubmit={handleSendMessage}>
