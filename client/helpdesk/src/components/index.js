@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AuthService from "../authentication/auth.service";
 import {
 Nav,
 NavLink,
@@ -18,6 +19,8 @@ export default function Navbar() {
         e.preventDefault();
         //alert("User successfully logged in");
         setAuthenticated(false);
+		//Remove token from storage
+		AuthService.logout();
 		navigate('/home');
     };
 

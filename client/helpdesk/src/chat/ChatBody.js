@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import authContext from '../authContext';
 import "./chat.css"
 
 const ChatBody = ({ socket, messages, recepient }) => {
   const navigate = useNavigate();
+  const {authenticated, setAuthenticated} = useContext(authContext);
 
   const handleLeaveChat = () => {
     localStorage.removeItem('userID');
-    navigate('/home');
-    window.location.reload();
+    //If user is authenticated or not handle leaving the chat differently.
+    if(authenticated){
+      //If agent is authenticated remove chat and display something else probably another chat
+    }
+    else{
+      //User user is not authenticated so stop
+      navigate('/home')
+    }
   };
 
   return (
