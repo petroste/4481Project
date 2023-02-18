@@ -29,6 +29,7 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
       </header>
 
       <div className="message__container">
+
         {messages.map((message, index) => (
           message.from === socket.userID && message.to === recepient.userID ? (
             <div className="message__chats" key={index}>
@@ -37,17 +38,16 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
                 <p>{message.content}</p>
               </div>
             </div>
-          ) : (<></>)
-        ))}
-        {messages.map((message, index) => (
-          message.from === recepient.userID ? (
-            <div className="message__chats" key={index}>
+          ) : (
+            message.from === recepient.userID ? (
+              <div className="message__chats" key={index}>
               <p>{recepient.userName}</p>
               <div className="message__recipient">
                 <p>{message.content}</p>
               </div>
             </div>
-          ) : (<></>)
+            ) : (<></>)
+          )
         ))}
       </div>
     </>
