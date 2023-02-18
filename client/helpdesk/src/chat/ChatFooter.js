@@ -19,6 +19,7 @@ const ChatFooter = ({ socket, recepient, users, setUsers, messages, setMessages 
       })
       setUsers(users)
       setMessages([...messages, { content: message, from: socket.userID, to: recepient.userID }])
+      setMessage("")
     }
   };
 

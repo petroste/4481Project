@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import roles from '../enums';
 import "./chat.css"
 
-const ChatBar = ({ socket, users, setUsers, setRecepient }) => {
+const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
+  const [userName, setUserName] = useState("No user");
 
   useEffect(() => {
     socket.on('users', (users) => {
@@ -15,7 +16,7 @@ const ChatBar = ({ socket, users, setUsers, setRecepient }) => {
       setUsers(users)
     })
   }, [socket, users])
-
+  
   return (
     <div className="chat__sidebar">
       <h2>Open Chat</h2>
@@ -30,7 +31,7 @@ const ChatBar = ({ socket, users, setUsers, setRecepient }) => {
             )
           ) : (
             users.map(user => (user.role === roles.AGENT) ?
-              (<button onClick={() => setRecepient(user)} key={user.userID}>{user.userName} | {user.role}</button>) : (<></>)
+              (<button onClick={() => setRecepient(user)} key={user.userID }>{user.userName} | {user.role}</button>) : (<></>)
             )
           )}
 

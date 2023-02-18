@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authContext from '../authContext';
 import "./chat.css"
 
-const ChatBody = ({ socket, messages, recepient }) => {
+const ChatBody = ({ socket, messages, recepient, userName }) => {
   const navigate = useNavigate();
-  const {authenticated, setAuthenticated} = useContext(authContext);
+  const { authenticated } = useContext(authContext);
 
   const handleLeaveChat = () => {
     localStorage.removeItem('userID');
@@ -25,6 +25,7 @@ const ChatBody = ({ socket, messages, recepient }) => {
         <button className="leaveChat__btn" onClick={handleLeaveChat}>
           LEAVE CHAT
         </button>
+        <h1 id="chatTitle">{userName}</h1>
       </header>
 
       <div className="message__container">
