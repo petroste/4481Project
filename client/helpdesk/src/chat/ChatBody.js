@@ -15,6 +15,7 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
     }
     else{
       //User user is not authenticated so stop
+      socket.disconnect();
       navigate('/home')
     }
   };

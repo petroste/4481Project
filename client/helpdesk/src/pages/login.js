@@ -4,6 +4,7 @@ import authContext from '../authContext';
 import '../components/login.css';
 import roles from '../enums';
 import AuthService from "../authentication/auth.service";
+
 export default function Login({ socket }) {
     const navigate = useNavigate();
     const [errMsgs, setErrMsgs] = useState({});
@@ -29,7 +30,6 @@ export default function Login({ socket }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-       
         //Authenticate the user
         AuthService.login(userName, password).then(
             () => {

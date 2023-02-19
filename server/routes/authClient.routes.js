@@ -1,4 +1,4 @@
-const ctrl = require("../controllers/auth.controller");
+const ctrl = require("../controllers/authClient.controller");
 
 
 module.exports = function(app) {
@@ -10,5 +10,6 @@ module.exports = function(app) {
       next();
     });
 
-    app.post("/login", ctrl.login);
+    app.get("/getAgent", ctrl.getAgentToConnect);
+
 };

@@ -4,7 +4,7 @@ import ChatBody from '../chat/ChatBody';
 import ChatFooter from '../chat/ChatFooter';
 import "../chat/chat.css"
 
-const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, setUsers }) => {
+const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, setUsers}) => {
 
   useEffect(() => {
     socket.on('message', (message) => {

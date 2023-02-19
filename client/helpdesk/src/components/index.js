@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthService from "../authentication/auth.service";
 import {
 Nav,
 NavLink,
@@ -10,17 +9,17 @@ NavBtn,
 NavBtnLink,
 } from './navbar';
 import authContext from '../authContext';
+import socket from '../sockets/index';
 
 export default function Navbar() {
 	const navigate = useNavigate();
 	const {authenticated, setAuthenticated} = useContext(authContext);
-
 	const handleLogout = (e) => {
         e.preventDefault();
         //alert("User successfully logged in");
         setAuthenticated(false);
 		//Remove token from storage
-		AuthService.logout();
+		socket.disconnect();
 		navigate('/home');
     };
 

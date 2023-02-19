@@ -1,26 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import UserService from '../authentication/user.service';
 import roles from '../enums';
 
-const Home = ({ socket }) => {
+export default function Home ({ socket }){
+
   const navigate = useNavigate();
   var issue = ""
   var userName = ""
   const handleSubmit = (e) => {
     e.preventDefault();
-    socket.auth = { userName: userName, role: roles.CUSTOMER }
-    socket.connect();
-    socket.on("session", ({ sessionID, userID, role }) => {
-      // attach the session ID to the next reconnection attempts
-      socket.auth = { sessionID };
-      // store it in the localStorage
-      localStorage.setItem("sessionID", sessionID);
-      localStorage.setItem("userID", socket.userID);
-      // save the ID of the user
-      socket.userID = userID;
-      socket.role = role;
+    var agentToConnect;
+    UserService.getAgentToConnect().then( () => {
+        socket.auth = { userName: userName, role: roles.CUSTOMER }
+        agentToConnect = localStorage.getItem("agent");
+        socket.connect();
+        socket.on("session", ({ sessionID, userID, role }) => {
+        // attach the session ID to the next reconnection attempts
+        socket.auth = { sessionID };
+        // store it in the localStorage
+        localStorage.setItem("sessionID", sessionID);
+        localStorage.setItem("userID", socket.userID);
+        // save the ID of the user
+        socket.userID = userID;
+        socket.role = role;
+        });
+        navigate('/tempchat');
+    },
+    error => {
+        alert("There are no active agents currently, please try again later.");
     });
-    navigate('/tempchat');
+
   };
 
   const setIssue = (value) => {
@@ -55,5 +65,3 @@ const Home = ({ socket }) => {
     </>
   );
 };
-
-export default Home;

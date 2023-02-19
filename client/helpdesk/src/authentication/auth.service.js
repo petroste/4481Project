@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:4000/login";
+const API_URL = "http://localhost:4000/";
 
 //Handles http requests involving the user tokens.
 class AuthService {
   login(username, password) {
     return axios
-      .post(API_URL, {
+      .post(API_URL + "login", {
         username,
         password
       })
@@ -19,7 +19,7 @@ class AuthService {
       });
   }
 
-  logout() {
+  logout(username) {
     localStorage.removeItem("user");
   }
 

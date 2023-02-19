@@ -21,7 +21,7 @@ function App() {
         <BrowserRouter>
           <Navbar />
           <Routes>
-            <Route path='/home' exact element={<Home socket={socket} />} />
+            <Route path='/home' exact element={<Home socket={socket}/>} />
             <Route path='/about' element={<About />} />
             <Route path='/login' element={<Login socket={socket} />} />
             <Route path='/tempchat' element={<Chat socket={socket} recepient={recepient} setRecepient={setRecepient} messages={messages} setMessages={setMessages} users={users} setUsers={setUsers} />} />

@@ -19,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
+require('./routes/authClient.routes')(app);
 
 const uri = process.env.ATLAS_URI;
 db.mongoose.connect(uri, { useNewUrlParser: true })

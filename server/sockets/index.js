@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const sessionStore = new InMemorySessionStore();
 const messageStore = new InMemoryMessageStore();
 const randomId = () => crypto.randomBytes(8).toString("hex");
+const authenticatedUsers = new Map();
 
 function socket(http) {
     const socketIO = require('socket.io')(http, {
@@ -60,6 +61,12 @@ function socket(http) {
             role: socket.role
         });
 
+        if (socket.role == "Agent")
+        {
+            authenticatedUsers.set(socket.userName, 0);
+            console.log (Array.from(authenticatedUsers.values()));
+        }
+
         // join the userID room
         socket.join(socket.userID);
         // listing all users
@@ -89,6 +96,8 @@ function socket(http) {
             });
         })
 
+
+
         socket.emit("users", users);
 
         // notify existing users
@@ -110,6 +119,10 @@ function socket(http) {
             const matchingSockets = await socketIO.in(socket.userID).allSockets();
             const isDisconnected = matchingSockets.size === 0;
             console.log('🔥: A user disconnected');
+            if (socket.role == "Agent")
+            {
+                authenticatedUsers.delete(socket.userName);
+            }
             if (isDisconnected) {
                 // notify other users
                 socket.broadcast.emit("user disconnected", socket.userID);
@@ -118,4 +131,4 @@ function socket(http) {
     });
 
 }
-module.exports = { socket }
+module.exports = { socket: socket, authenticatedUsers: authenticatedUsers }
