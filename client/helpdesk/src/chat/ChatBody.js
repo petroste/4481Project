@@ -25,7 +25,7 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
         <button className="leaveChat__btn" onClick={handleLeaveChat}>
           LEAVE CHAT
         </button>
-        <h1 id="chatTitle">{userName}</h1>
+          <h1 className="user_name">{recepient.userName}</h1> 
       </header>
 
       <div className="message__container">
