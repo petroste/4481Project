@@ -10,10 +10,8 @@ export default function Home ({ socket }){
   var userName = ""
   const handleSubmit = (e) => {
     e.preventDefault();
-    var agentToConnect;
     UserService.getAgentToConnect().then( () => {
         socket.auth = { userName: userName, role: roles.CUSTOMER }
-        agentToConnect = localStorage.getItem("agent");
         socket.connect();
         socket.on("session", ({ sessionID, userID, role }) => {
         // attach the session ID to the next reconnection attempts
@@ -21,6 +19,7 @@ export default function Home ({ socket }){
         // store it in the localStorage
         localStorage.setItem("sessionID", sessionID);
         localStorage.setItem("userID", socket.userID);
+        localStorage.setItem(localStorage.getItem("userID") + "Agent", localStorage.getItem("agent"));
         // save the ID of the user
         socket.userID = userID;
         socket.role = role;
