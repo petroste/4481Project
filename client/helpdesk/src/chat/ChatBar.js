@@ -48,13 +48,8 @@ const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
               (<button className='chat__button' onClick={(e) => {handleClick(e); handleRecepient(user);}} key={user.userID}>{user.userName} | {user.role}</button>) : (<></>)
             )
           ) : (
-<<<<<<< HEAD
             users.map(user => (user.role === roles.AGENT && "\"" + user.userName + "\"" === agentToConnect) ?
               (<button onClick={() => setRecepient(user)} key={user.userID }>{user.userName} | {user.role}</button>) : (<></>)
-=======
-            users.map(user => (socket.userID !== user.userID && user.role === roles.AGENT) ?
-              (<button className='chat__button' onClick={(e) => {handleClick(e); handleRecepient(user);}} key={user.userID }>{user.userName} | {user.role}</button>) : (<></>)
->>>>>>> 58c5e39a (various small changes)
             )
           )}
         </div>
