@@ -10,6 +10,7 @@ NavBtnLink,
 } from './navbar';
 import authContext from '../authContext';
 import socket from '../sockets/index';
+import './welcomeMsg.css';
 
 export default function Navbar() {
 	const navigate = useNavigate();
@@ -39,10 +40,11 @@ return (
 				{authenticated ?
 				<NavLink to='/tempchat'>
 					Chats
-				</NavLink> :
-				null}
+				</NavLink> : <></>
+				}
 			</div>
             </NavMenu>
+			<div className='user__label'>{authenticated ? (<div> Welcome, {localStorage.getItem(localStorage.getItem("userID"))}</div>) : <></>}</div>
 		    <NavBtn>
 			<div>{authenticated ?
 		    	<NavBtnLink onClick={handleLogout}>
