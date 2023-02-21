@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import UserService from '../authentication/user.service';
 import roles from '../enums';
 
-export default function Home ({ socket }){
+export default function Home ({ socket  }){
 
   const navigate = useNavigate();
   var issue = ""
   var userName = ""
+  const [message, setMessage] = useState("")
+
   const handleSubmit = (e) => {
     e.preventDefault();
     UserService.getAgentToConnect(userName).then( () => {
@@ -51,12 +53,8 @@ export default function Home ({ socket }){
                 onChange={(e) => setUserName(e.target.value)} required />
 
             </div>
-            <div className='input-fields'>
-              <label>Please describe your issue.</label>
-              <textarea rows="5" cols="80" name="issue" onChange={(e) => setIssue(e.target.value)} required ></textarea>
-            </div>
-            <div className='submit-button'>
-              <input type="submit" />
+            <div className='client-submit'>
+              <input type="submit" value="Begin Chat"/> 
             </div>
           </form>
         </div>

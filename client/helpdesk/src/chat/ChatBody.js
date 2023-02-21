@@ -30,7 +30,18 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
       </header>
 
       <div className="message__container">
+      {recepient.userName !== null && sessionStorage.getItem("agentToConnect") !== null ? (
+                  <div className="message__chats">
+                  <p>{recepient.userName}</p>
+                  <div className="message__recipient"> 
+                  <p>Hello my name is, {sessionStorage.getItem("agentToConnect")}. I am the agent that will be taking care of your issue. 
+                  Please click the blue button on your left with my name to open our chat, then type your issue below and I will respond as soon as possible!</p> 
+                  </div>
+                  </div>
+      ): (<></>)}
 
+              
+       
         {messages.map((message, index) => (
           message.from === socket.userID && message.to === recepient.userID ? (
             <div className="message__chats" key={index}>

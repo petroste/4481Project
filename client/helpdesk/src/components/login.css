@@ -69,3 +69,9 @@
     width: 20rem;
     display: inline-block;
   }
+
+  .client-submit{
+    display: flex;
+    justify-content: center;
+    margin-top: 20%;
+  }
