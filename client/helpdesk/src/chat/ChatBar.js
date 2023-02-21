@@ -4,7 +4,7 @@ import "./chat.css"
 
 const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
   const [userName, setUserName] = useState("No user");
-  var agentToConnect = localStorage.getItem(localStorage.getItem("userID") + "Agent");
+  var agentToConnect = sessionStorage.getItem("agentToConnect");
   
   useEffect(() => {
     socket.on('users', (users) => {
@@ -49,7 +49,7 @@ const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
             )
           ) : (
             users.map(user => (user.role === roles.AGENT && "\"" + user.userName + "\"" === agentToConnect) ?
-              (<button onClick={() => setRecepient(user)} key={user.userID }>{user.userName} | {user.role}</button>) : (<></>)
+              (<button className='chat__button' onClick={(e) => {handleClick(e); handleRecepient(user);}} key={user.userID }>{user.userName} | {user.role}</button>) : (<></>)
             )
           )}
         </div>
