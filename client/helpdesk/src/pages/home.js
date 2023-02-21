@@ -19,7 +19,7 @@ export default function Home ({ socket }){
         // store it in the localStorage
         localStorage.setItem("sessionID", sessionID);
         localStorage.setItem("userID", socket.userID);
-        localStorage.setItem(localStorage.getItem("userID") + "Agent", localStorage.getItem("agent"));
+        sessionStorage.setItem("Agent", localStorage.getItem("agent"));
         // save the ID of the user
         socket.userID = userID;
         socket.role = role;

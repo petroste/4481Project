@@ -14,7 +14,7 @@ import './welcomeMsg.css';
 
 export default function Navbar() {
 	const navigate = useNavigate();
-	const {authenticated, setAuthenticated} = useContext(authContext);
+	const {authenticated, setAuthenticated} = useContext(authContext);	
 	const handleLogout = (e) => {
         e.preventDefault();
         //alert("User successfully logged in");
@@ -44,7 +44,7 @@ return (
 				}
 			</div>
             </NavMenu>
-			<div className='user__label'>{authenticated ? (<div> Welcome, {localStorage.getItem(localStorage.getItem("userID"))}</div>) : <></>}</div>
+			<div className='user__label'>{authenticated ? (<div> Welcome, {sessionStorage.getItem("userName")}</div>) : <></>}</div>
 		    <NavBtn>
 			<div>{authenticated ?
 		    	<NavBtnLink onClick={handleLogout}>
