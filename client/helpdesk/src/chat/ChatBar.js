@@ -14,7 +14,7 @@ const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
         });
         user.self = user.userID === socket.userID;
       });
-      setUsers(users)
+      setUsers(users);
     })
   }, [socket, users])
 
@@ -44,8 +44,9 @@ const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
 
         <div className="chat__users">
           {(socket.role === roles.AGENT) ? (
-            users.map(user => (socket.userID !== user.userID && user.role === roles.CUSTOMER) ?
-              (<button className='chat__button' onClick={(e) => {handleClick(e); handleRecepient(user);}} key={user.userID}>{user.userName} | {user.role}</button>) : (<></>)
+            users.map(user => (socket.userID !== user.userID && user.role === roles.CUSTOMER && sessionStorage.getItem(user.userName) !== null) ?
+              (<button className='chat__button' onClick={(e) => {handleClick(e); handleRecepient(user);}} key={user.userID}>{user.userName} | {user.role}</button>)
+               : (<></>)
             )
           ) : (
             users.map(user => (user.role === roles.AGENT && "\"" + user.userName + "\"" === agentToConnect) ?

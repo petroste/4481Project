@@ -13,12 +13,30 @@ class UserService {
     return axios.get(API_URL + 'user', { headers: authHeader() });
   }
 
-  getAgentToConnect(){
-    return axios.get(API_URL + "getAgent")
+  getAgentToConnect(userName){
+    return axios.post(API_URL + "getAgent", {
+            userName
+          })
           .then(response => {        
             if (response.data.agent) {
               localStorage.setItem("agent", JSON.stringify(response.data.agent));
             }
+            return response.data; 
+          });
+  }
+
+  getCustomerList(agent){
+    return axios.post(API_URL + "getCustomerList", {
+            agent
+          })
+          .then(response => {
+            const customers = response.data.customers;
+           if (customers){
+              for(var i = 0; i < customers.length; i++){
+                sessionStorage.setItem(customers[i], "present");
+              }
+           }
+
             return response.data; 
           });
   }

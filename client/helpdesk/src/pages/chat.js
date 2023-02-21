@@ -3,10 +3,20 @@ import ChatBar from '../chat/ChatBar';
 import ChatBody from '../chat/ChatBody';
 import ChatFooter from '../chat/ChatFooter';
 import "../chat/chat.css"
+import UserService from '../authentication/user.service';
 
 const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, setUsers}) => {
 
   useEffect(() => {
+
+    socket.on('refresh', () => {
+      var agent = sessionStorage.getItem("userName");
+      //  alert(agent);
+        UserService.getCustomerList(agent).then(() => {}, error => {
+          console.log ("Unable to get list of customers for some reason.");
+        });
+    });
+
     socket.on('message', (message) => {
       users.forEach((user) => {
         const fromSelf = socket.userID === message.from

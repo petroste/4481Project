@@ -10,7 +10,7 @@ export default function Home ({ socket }){
   var userName = ""
   const handleSubmit = (e) => {
     e.preventDefault();
-    UserService.getAgentToConnect().then( () => {
+    UserService.getAgentToConnect(userName).then( () => {
         socket.auth = { userName: userName, role: roles.CUSTOMER }
         socket.connect();
         socket.on("session", ({ sessionID, userID, role }) => {

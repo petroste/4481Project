@@ -10,6 +10,8 @@ module.exports = function(app) {
       next();
     });
 
-    app.get("/getAgent", ctrl.getAgentToConnect);
+    app.post("/getAgent", ctrl.getAgentToConnect);
+
+    app.post("/getCustomerList", ctrl.getCustomerList);
 
 };

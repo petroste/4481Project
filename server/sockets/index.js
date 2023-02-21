@@ -63,7 +63,7 @@ function socket(http) {
 
         if (socket.role == "Agent")
         {
-            authenticatedUsers.set(socket.userName, 0);
+            authenticatedUsers.set(socket.userName, []);
             console.log (Array.from(authenticatedUsers.values()));
         }
 
@@ -97,11 +97,13 @@ function socket(http) {
         })
 
 
-
         socket.emit("users", users);
 
         // notify existing users
         socket.broadcast.emit("users", users);
+
+        socket.emit("refresh");
+        socket.broadcast.emit("refresh");
 
         console.log(`⚡: ${socket.id} ${socket.userName} just connected!`);
 
