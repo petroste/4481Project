@@ -7,15 +7,15 @@ import AuthService from "../authentication/auth.service";
 
 export default function Switch({ socket }) {
     const navigate = useNavigate();
-    var originalAgent = ""
-    var clientName = ""
+    var targetAgent = ""
+    var customer = ""
 
     const setAgentName = (value) => {
-        originalAgent = value
+        targetAgent = value
     }
 
     const setClientName = (value) => {
-        clientName = value
+        customer = value
     }
 
     const handleSubmit = (e) => {
@@ -36,7 +36,7 @@ export default function Switch({ socket }) {
                     </div>
                     <div className='input-fields'>
                         <label>Client Name</label>
-                        <input type='text' name='originalAgent' onChange={(e) => setClientName(e.target.value)} required />
+                        <input type='text' name='customer' onChange={(e) => setClientName(e.target.value)} required />
                     </div>
                     <div className='submit-button'>
                         <input type="submit" />

@@ -3,6 +3,7 @@ class SessionStore {
     findSession(id) { }
     saveSession(id, session) { }
     findAllSessions() { }
+    removeSession(id) { }
 }
 class InMemorySessionStore extends SessionStore {
     constructor() {
@@ -20,6 +21,10 @@ class InMemorySessionStore extends SessionStore {
 
     findAllSessions() {
         return [...this.sessions.values()];
+    }
+
+    removeSession(id){
+        this.sessions.delete(id);
     }
 }
 module.exports = {

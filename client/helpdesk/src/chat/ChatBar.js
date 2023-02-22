@@ -16,6 +16,10 @@ const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
       });
       setUsers(users);
     })
+    
+    if(document.getElementsByClassName("chat__button").length === 0 && sessionStorage.getItem("agentToConnect") != null){
+      alert("Agent has left the chat. Please return to Home and try to connect to a new agent.")
+    }
   }, [socket, users])
 
   const handleClick = (e) => {

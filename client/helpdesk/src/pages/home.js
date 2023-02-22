@@ -19,9 +19,9 @@ export default function Home ({ socket  }){
         // attach the session ID to the next reconnection attempts
         socket.auth = { sessionID };
         // store it in the localStorage
-        localStorage.setItem("sessionID", sessionID);
-        localStorage.setItem("userID", socket.userID);
-        sessionStorage.setItem("agentToConnect", localStorage.getItem("agent"));
+        sessionStorage.setItem("sessionID", sessionID);
+        sessionStorage.setItem("userID", socket.userID);
+        sessionStorage.setItem("agentToConnect", sessionStorage.getItem("agent"));
         // save the ID of the user
         socket.userID = userID;
         socket.role = role;

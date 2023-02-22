@@ -8,13 +8,14 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
   const { authenticated } = useContext(authContext);
 
   const handleLeaveChat = () => {
-    localStorage.removeItem('userID');
+    sessionStorage.removeItem('userID');
     //If user is authenticated or not handle leaving the chat differently.
     if(authenticated && recepient.userName !== null){
       sessionStorage.removeItem(recepient.userName);
     }
     else{
       //User user is not authenticated so stop
+      sessionStorage.clear();
       socket.disconnect();
       navigate('/home')
     }

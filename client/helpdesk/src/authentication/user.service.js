@@ -19,7 +19,7 @@ class UserService {
           })
           .then(response => {        
             if (response.data.agent) {
-              localStorage.setItem("agent", JSON.stringify(response.data.agent));
+              sessionStorage.setItem("agent", JSON.stringify(response.data.agent));
             }
             return response.data; 
           });

@@ -6,7 +6,7 @@ const ChatFooter = ({ socket, recepient, users, setUsers, messages, setMessages 
   const [message, setMessage] = useState("")
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (message.trim() && localStorage.getItem("userID")) {
+    if (message.trim() && sessionStorage.getItem("userID")) {
       socket.emit('message', {
         content: message,
         to: recepient.userID

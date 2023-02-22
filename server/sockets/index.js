@@ -123,9 +123,20 @@ function socket(http) {
             console.log('🔥: A user disconnected');
             if (socket.role == "Agent")
             {
+                users.pop(socket.userID);
+                console.log(users);
+                socket.emit("users", users);
+                socket.broadcast.emit("users", users);
+
                 authenticatedUsers.delete(socket.userName);
             }
             if (isDisconnected) {
+                // Remove user from all rooms
+                matchingSockets.forEach((socket) => {
+                     socket.leaveAll();
+                 });
+                // Remove user's session from session store
+                sessionStore.removeSession(socket.sessionID);
                 // notify other users
                 socket.broadcast.emit("user disconnected", socket.userID);
             }
