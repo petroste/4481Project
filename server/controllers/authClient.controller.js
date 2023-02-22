@@ -55,7 +55,7 @@ exports.assignCustomerToAgent = (req, res) => {
             // find and add customer to the target agent array
             customerListForTargetAgent.push(customer);
             authenticatedUsers.set(targetAgent, customerListForTargetAgent);
-
+            console.log(Array.from(authenticatedUsers.keys()) + "=>>>" + Array.from(authenticatedUsers.values()));
             res.status(200).send({message: "Switch performed successfully"});
         }
         else

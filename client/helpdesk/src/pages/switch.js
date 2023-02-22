@@ -1,13 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import authContext from '../authContext';
 import '../components/login.css';
-import roles from '../enums';
-import AuthService from "../authentication/auth.service";
+import UserService from '../authentication/user.service';
 
 export default function Switch({ socket }) {
-    const navigate = useNavigate();
-    var targetAgent = ""
+    var originalAgent = "";
+    var targetAgent = "";
     var customer = ""
 
     const setAgentName = (value) => {
@@ -20,7 +17,16 @@ export default function Switch({ socket }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        //Handle Switch
+        originalAgent = sessionStorage.getItem("userName");
+        UserService.assignCustomerToAgent(originalAgent, targetAgent, customer).then(
+            () => {
+                socket.emit("customerReassigned", {originalAgent, targetAgent, customer});
+                alert ("Switch performed successfully");
+            },
+            error => {
+                alert("Agent offline or customer doesn't exist! Please try again.");
+            }
+        );     
     };
 
 

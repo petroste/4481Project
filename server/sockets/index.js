@@ -102,7 +102,15 @@ function socket(http) {
         // notify existing users
         socket.broadcast.emit("users", users);
 
+        socket.emit("refresh");
+        socket.broadcast.emit("refresh");
+
         console.log(`⚡: ${socket.id} ${socket.userName} just connected!`);
+
+        socket.on("customerReassigned", ({ originalAgent, targetAgent, customer }) => {
+            socket.emit("customerReassigned", { originalAgent, targetAgent, customer });
+            socket.broadcast.emit("customerReassigned", { originalAgent, targetAgent, customer });
+        })
 
         socket.on('message', ({ content, to }) => {
             const message = {

@@ -22,6 +22,7 @@ export default function Home ({ socket  }){
         sessionStorage.setItem("sessionID", sessionID);
         sessionStorage.setItem("userID", socket.userID);
         sessionStorage.setItem("agentToConnect", sessionStorage.getItem("agent"));
+        sessionStorage.setItem("userName", userName);
         // save the ID of the user
         socket.userID = userID;
         socket.role = role;
