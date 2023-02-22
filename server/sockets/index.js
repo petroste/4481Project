@@ -102,9 +102,6 @@ function socket(http) {
         // notify existing users
         socket.broadcast.emit("users", users);
 
-        socket.emit("refresh");
-        socket.broadcast.emit("refresh");
-
         console.log(`⚡: ${socket.id} ${socket.userName} just connected!`);
 
         socket.on('message', ({ content, to }) => {

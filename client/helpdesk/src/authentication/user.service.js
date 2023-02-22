@@ -40,6 +40,24 @@ class UserService {
             return response.data; 
           });
   }
+
+  assignCustomerToAgent(customer, agent){
+    return axios.post(API_URL + "assign", {
+        originalAgent,
+        targetAgent,
+        customer
+    })
+    .then(response => {
+      const customers = response.data.customers;
+     if (customers){
+        for(var i = 0; i < customers.length; i++){
+          sessionStorage.setItem(customers[i], "present");
+        }
+     }
+
+      return response.data; 
+    });
+  }
   
 }
 
