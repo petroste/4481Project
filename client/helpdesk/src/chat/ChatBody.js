@@ -10,8 +10,8 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
   const handleLeaveChat = () => {
     localStorage.removeItem('userID');
     //If user is authenticated or not handle leaving the chat differently.
-    if(authenticated){
-      //If agent is authenticated remove chat and display something else probably another chat
+    if(authenticated && recepient.userName !== null){
+      sessionStorage.removeItem(recepient.userName);
     }
     else{
       //User user is not authenticated so stop

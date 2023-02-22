@@ -73,6 +73,7 @@ export const NavBtn = styled.nav
 display: flex;
 align-items: center;
 margin-right: 24px;
+margin-left: 50px;
 @media screen and (max-width: 768px) {
 	display: none;
 }

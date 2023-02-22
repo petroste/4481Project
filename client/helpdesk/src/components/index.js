@@ -43,7 +43,14 @@ return (
 				</NavLink> : <></>
 				}
 			</div>
-            </NavMenu>
+			<div>
+				{authenticated ?
+				<NavLink to='/switch'>
+					Switch
+				</NavLink> : <></>
+				}
+			</div>
+        </NavMenu>
 			<div className='user__label'>{authenticated ? (<div> Welcome, {sessionStorage.getItem("userName")}</div>) : <></>}</div>
 		    <NavBtn>
 			<div>{authenticated ?
