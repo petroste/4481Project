@@ -11,7 +11,8 @@ function socket(http) {
     const socketIO = require('socket.io')(http, {
         cors: {
             origin: "http://localhost:3000"
-        }
+        },
+        maxHttpBufferSize: 1e8 // 100 MB
     });
 
     // middleware
@@ -128,16 +129,27 @@ function socket(http) {
               "upload/" + "test.png",
               data,
               { encoding: "base64" },
-              () => {}
+              (err) => {
+                if (err) {
+                  console.log("Error writing file:", err);
+                  return;
+                }
+              }
             );
+            
             const message = {
                 content: data.toString("base64"),
                 from: socket.userID,
                 to,
-                type: "image",
-            }
+                type: "file",
+            };
+
+            if(data.startsWith("data:image/jpeg") || data.startsWith("data:image/png")){
+                message.type = "image";
+              }
         
             socket.to(to).to(socket.userID).emit("confirmUpload", message);
+
           });
         
 

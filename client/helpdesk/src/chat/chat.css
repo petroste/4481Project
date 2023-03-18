@@ -160,6 +160,21 @@
   margin-left: auto;
   font-size: 15px;
 }
+.image__recipient {
+  background-color: #f5ccc2;
+  max-width: 820px;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 15px;
+}
+.image__sender {
+  background-color: rgb(194, 243, 194);
+  max-width: 820px;
+  padding: 10px;
+  border-radius: 10px;
+  margin-left: auto;
+  font-size: 15px;
+}
 .message__chats > p {
   font-size: 13px;
 }

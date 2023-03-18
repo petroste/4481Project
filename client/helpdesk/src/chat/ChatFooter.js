@@ -36,14 +36,30 @@ const ChatFooter = ({ socket, recepient, users, setUsers, messages, setMessages 
   function fileSelected(e) {
     const file = e.target.files[0];
     if (!file) return;
+    const maxSize = 1e8; // 100MB maximum file size
+    if (file.size > maxSize) {
+      alert("File size exceeds the maximum allowed limit.");
+      return;
+    }
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
       const data = reader.result;
-      socket.emit("upload", {data, from: socket.userID, to: recepient.userID });
-      setUsers(users)
-      setMessages([...messages, { content: reader.result, from: socket.userID, to: recepient.userID, type: "image" }])
-      setMessage("")
+      if(data.startsWith("data:image/jpeg") || data.startsWith("data:image/png")){
+        socket.emit("upload", { data, from: socket.userID, to: recepient.userID });
+        setUsers(users);
+        setMessages([...messages, { content: reader.result, from: socket.userID, to: recepient.userID, type: "image" }]);
+        setMessage("");
+      }
+      else if(data.startsWith("data:application/pdf") || data.startsWith("data:text/plain")){
+        socket.emit("upload", { data, from: socket.userID, to: recepient.userID });
+        setUsers(users);
+        setMessages([...messages, { content: reader.result, from: socket.userID, to: recepient.userID, type: "file" }]);
+        setMessage("");
+      }
+      else{
+        alert("File type not supported!");
+      }
     };
   }
 

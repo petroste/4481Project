@@ -39,7 +39,7 @@ const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, s
         user.messages.push({
           content: message.content,
           fromSelf,
-          type: "image"
+          type: "file"
         });
       }
     })
