@@ -32,6 +32,21 @@ const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, s
     })
   }, [socket, messages, users]);
 
+  socket.on("confirmUpload", (message) => {
+    users.forEach((user) => {
+      const fromSelf = socket.userID === message.from
+      if (user.userID === (fromSelf ? message.to : message.from)) {
+        user.messages.push({
+          content: message.content,
+          fromSelf,
+          type: "image"
+        });
+      }
+    })
+    setUsers(users)
+    setMessages([...messages, message])
+  });
+
   return (
     <div className="chat">
       <ChatBar socket={socket} users={users} setUsers={setUsers} setRecepient={setRecepient} />

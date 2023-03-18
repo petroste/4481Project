@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useResolvedPath } from 'react-router-dom';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
 import "./chat.css"
+
 
 const ChatFooter = ({ socket, recepient, users, setUsers, messages, setMessages }) => {
   const [message, setMessage] = useState("")
+  const fileRef = useRef();
+
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (message.trim() && sessionStorage.getItem("userID")) {
@@ -18,10 +24,28 @@ const ChatFooter = ({ socket, recepient, users, setUsers, messages, setMessages 
         })
       })
       setUsers(users)
-      setMessages([...messages, { content: message, from: socket.userID, to: recepient.userID }])
+      setMessages([...messages, { content: message, from: socket.userID, to: recepient.userID, type: "basicMessage" }])
       setMessage("")
     }
   };
+
+  function selectFile() {
+    fileRef.current.click();
+  }
+
+  function fileSelected(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const data = reader.result;
+      socket.emit("upload", {data, from: socket.userID, to: recepient.userID });
+      setUsers(users)
+      setMessages([...messages, { content: reader.result, from: socket.userID, to: recepient.userID, type: "image" }])
+      setMessage("")
+    };
+  }
 
   return (
     <div className="chat__footer">
@@ -33,6 +57,17 @@ const ChatFooter = ({ socket, recepient, users, setUsers, messages, setMessages 
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
+        <InputAdornment position="end">
+        <input
+                onChange={fileSelected}
+                ref={fileRef}
+                type="file"
+                style={{ display: "none" }}
+        />
+          <IconButton type="button" edge="end" onClick={selectFile}>
+            <AttachFileIcon />
+          </IconButton>
+        </InputAdornment>
         <button className="sendBtn">SEND</button>
       </form>
     </div>

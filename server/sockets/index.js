@@ -1,3 +1,4 @@
+const fs = require("fs");
 const { InMemorySessionStore } = require("./sessionStore");
 const { InMemoryMessageStore } = require('./messageStore')
 const crypto = require('crypto');
@@ -116,6 +117,24 @@ function socket(http) {
             socket.to(to).to(socket.userID).emit('message', message)
             messageStore.saveMessage(message);
         });
+
+        socket.on("upload", ({ data, from, to }) => {
+            fs.writeFile(
+              "upload/" + "test.png",
+              data,
+              { encoding: "base64" },
+              () => {}
+            );
+            const message = {
+                content: data.toString("base64"),
+                from: socket.userID,
+                to,
+                type: "image",
+            }
+        
+            socket.to(to).to(socket.userID).emit("confirmUpload", message);
+          });
+        
 
         socket.on('disconnect', async () => {
             const matchingSockets = await socketIO.in(socket.userID).allSockets();

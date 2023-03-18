@@ -44,23 +44,42 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
               
        
         {messages.map((message, index) => (
-          message.from === socket.userID && message.to === recepient.userID ? (
-            <div className="message__chats" key={index}>
+          message.type === "image" ? (
+            message.from === socket.userID && message.to === recepient.userID ? (
+              <div className="message__chats" key={index}>
               <p className="sender__name">You</p>
               <div className="message__sender">
-                <p>{message.content}</p>
+                <img src={message.content} alt="image" width="200" height="200"/>
               </div>
             </div>
-          ) : (
-            message.from === recepient.userID ? (
+            ) : (
               <div className="message__chats" key={index}>
               <p>{recepient.userName}</p>
               <div className="message__recipient">
-                <p>{message.content}</p>
+                <img src={message.content} alt="image" width="200" height="200"/>
               </div>
             </div>
-            ) : (<></>)
+            )
+          ) : (
+            message.from === socket.userID && message.to === recepient.userID ? (
+              <div className="message__chats" key={index}>
+                <p className="sender__name">You</p>
+                <div className="message__sender">
+                  <p>{message.content}</p>
+                </div>
+              </div>
+            ) : (
+              message.from === recepient.userID && message.type === undefined ? (
+                <div className="message__chats" key={index}>
+                <p>{recepient.userName}</p>
+                <div className="message__recipient">
+                  <p>{message.content}</p>
+                </div>
+              </div>
+              ) : (<></>)
+            )
           )
+        
         ))}
       </div>
     </>

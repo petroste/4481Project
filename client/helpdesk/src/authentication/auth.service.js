@@ -16,6 +16,9 @@ class AuthService {
         }
 
         return response.data;
+      })
+      .catch(error => {
+        console.log(error.response.data.error)
       });
   }
 
