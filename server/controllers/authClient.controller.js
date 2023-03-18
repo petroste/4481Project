@@ -35,3 +35,36 @@ exports.getCustomerList = (req, res) => {
 
     res.status(200).send({customers: customers});
 }
+
+exports.assignCustomerToAgent = (req, res) => {
+    var originalAgent = req.body.originalAgent
+    var targetAgent = req.body.targetAgent;
+    var customer = req.body.customer;
+    var agentList = Array.from(authenticatedUsers.keys());
+    if (agentList.includes(originalAgent) && agentList.includes(targetAgent))
+    {
+        var customerListForOriginalAgent = Array.from(authenticatedUsers.get(originalAgent));
+        var customerListForTargetAgent = Array.from(authenticatedUsers.get(targetAgent));
+        if (customerListForOriginalAgent.includes(customer))
+        {
+            // find and delete customer in the original agent array
+            var index = customerListForOriginalAgent.indexOf(customer);
+            delete customerListForOriginalAgent[index];
+            authenticatedUsers.set(originalAgent, customerListForOriginalAgent);
+
+            // find and add customer to the target agent array
+            customerListForTargetAgent.push(customer);
+            authenticatedUsers.set(targetAgent, customerListForTargetAgent);
+            console.log(Array.from(authenticatedUsers.keys()) + "=>>>" + Array.from(authenticatedUsers.values()));
+            res.status(200).send({message: "Switch performed successfully"});
+        }
+        else
+        {
+            return res.status(404).send({message: "Customer is not in original agent's customer list"});
+        }
+    }
+    else
+    {
+        return res.status(404).send({message: "Target agent is not online"});
+    }
+}

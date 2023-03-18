@@ -108,6 +108,11 @@ function socket(http) {
 
         console.log(`⚡: ${socket.id} ${socket.userName} just connected!`);
 
+        socket.on("customerReassigned", ({ originalAgent, targetAgent, customer }) => {
+            socket.emit("customerReassigned", { originalAgent, targetAgent, customer });
+            socket.broadcast.emit("customerReassigned", { originalAgent, targetAgent, customer });
+        })
+
         socket.on('message', ({ content, to }) => {
             const message = {
                 content,

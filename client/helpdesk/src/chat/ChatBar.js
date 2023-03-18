@@ -1,12 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import roles from '../enums';
 import "./chat.css"
+import useSessionStorage from '../auxiliary/sessionHelper';
 
 const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
   const [userName, setUserName] = useState("No user");
+  const [value, setValue] = useSessionStorage('a', 'b');
   var agentToConnect = sessionStorage.getItem("agentToConnect");
   
   useEffect(() => {
+    socket.on('customerReassigned', ({ originalAgent, targetAgent, customer }) => {
+
+          if (sessionStorage.getItem("userName") === customer)
+          {
+            sessionStorage.setItem("agentToConnect", targetAgent);
+            agentToConnect = sessionStorage.getItem("agentToConnect");
+          }
+          else if(sessionStorage.getItem("userName") === targetAgent)
+          {
+            sessionStorage.setItem(customer, "present");
+          }
+          else if(sessionStorage.getItem("userName") === originalAgent)
+          {
+            sessionStorage.removeItem(customer);
+          }
+          else
+          {
+            // do nothing
+          }
+          // CODE BELOW WORKS
+          // DO NOT TOUCH
+          if (value === 'b')
+          {
+            setValue('c');
+          }
+          else
+          {
+            setValue('b');
+          }
+
+    });
     socket.on('users', (users) => {
       users.forEach((user) => {
         user.messages.forEach((message) => {
@@ -20,7 +53,7 @@ const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
     if(document.getElementsByClassName("chat__button").length === 0 && sessionStorage.getItem("agentToConnect") != null){
       alert("Agent has left the chat. Please return to Home and try to connect to a new agent.")
     }
-  }, [socket, users])
+  }, [socket, users, value])
 
   const handleClick = (e) => {
 
@@ -53,7 +86,7 @@ const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
                : (<></>)
             )
           ) : (
-            users.map(user => (user.role === roles.AGENT && "\"" + user.userName + "\"" === agentToConnect) ?
+            users.map(user => (user.role === roles.AGENT && ("\"" + user.userName + "\"" === agentToConnect || user.userName === agentToConnect)) ?
               (<button className='chat__button' onClick={(e) => {handleClick(e); handleRecepient(user);}} key={user.userID }>{user.userName} | {user.role}</button>) : (<></>)
             )
           )}

@@ -40,6 +40,18 @@ class UserService {
             return response.data; 
           });
   }
+
+  assignCustomerToAgent(originalAgent, targetAgent, customer){
+    return axios.post(API_URL + "assign", {
+        originalAgent,
+        targetAgent,
+        customer
+    })
+    .then(response => {
+      sessionStorage.removeItem(customer);
+    }
+    );
+  }
   
 }
 

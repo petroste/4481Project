@@ -14,4 +14,6 @@ module.exports = function(app) {
 
     app.post("/getCustomerList", ctrl.getCustomerList);
 
+    app.post("/assign", ctrl.assignCustomerToAgent);
+
 };
