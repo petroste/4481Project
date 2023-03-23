@@ -6,7 +6,7 @@ import useSessionStorage from '../auxiliary/sessionHelper';
 const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
   const [userName, setUserName] = useState("No user");
   const [value, setValue] = useSessionStorage('a', 'b');
-  var agentToConnect = sessionStorage.getItem("agentToConnect");
+  let agentToConnect = sessionStorage.getItem("agentToConnect");
   
   useEffect(() => {
     socket.on('customerReassigned', ({ originalAgent, targetAgent, customer }) => {
@@ -57,11 +57,11 @@ const ChatBar = ({ socket, users, setUsers, setRecepient}) => {
 
   const handleClick = (e) => {
 
-    var buttons = Array.from(document.getElementsByClassName("chat__button"))
+    let buttons = Array.from(document.getElementsByClassName("chat__button"))
 
-    for (let i = 0; i < buttons.length; i++)
+    for (const element of buttons)
     {
-      buttons[i].style.backgroundColor = "#295cf5";
+      element.style.backgroundColor = "#295cf5";
     }
       e.target.style.backgroundColor = "#FFFFFF";
 

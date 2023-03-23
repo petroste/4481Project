@@ -32,8 +32,8 @@ class UserService {
           .then(response => {
             const customers = response.data.customers;
            if (customers){
-              for(var i = 0; i < customers.length; i++){
-                sessionStorage.setItem(customers[i], "present");
+              for(const element of customers){
+                sessionStorage.setItem(element, "present");
               }
            }
 

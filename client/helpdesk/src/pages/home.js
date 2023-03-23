@@ -6,8 +6,8 @@ import roles from '../enums';
 export default function Home ({ socket  }){
 
   const navigate = useNavigate();
-  var issue = ""
-  var userName = ""
+  let issue = ""
+  let userName = ""
   const [message, setMessage] = useState("")
 
   const handleSubmit = (e) => {

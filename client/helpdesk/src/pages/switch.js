@@ -3,9 +3,9 @@ import '../components/login.css';
 import UserService from '../authentication/user.service';
 
 export default function Switch({ socket }) {
-    var originalAgent = "";
-    var targetAgent = "";
-    var customer = ""
+    let originalAgent = "";
+    let targetAgent = "";
+    let customer = ""
 
     const setAgentName = (value) => {
         targetAgent = value

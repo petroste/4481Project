@@ -51,12 +51,14 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
               </div>
             </div>
             ) : (
-              <div className="message__chats" key={index}>
-              <p>{recepient.userName}</p>
-              <div className="image__recipient">
-                <iframe src={message.content} alt="image" width="100%" height="800"/>
-              </div>
-            </div>
+              message.from === recepient.userID  ? (
+                <div className="message__chats" key={index}>
+                <p>{recepient.userName}</p>
+                <div className="image__recipient">
+                  <iframe src={message.content} alt="image" width="100%" height="800"/>
+                </div>
+                </div>
+            ) : (<></>)
             )
           ) : (
             message.type === "image" ? (
@@ -68,12 +70,14 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
                 </div>
               </div>
               ) : (
-                <div className="message__chats" key={index}>
-                <p>{recepient.userName}</p>
-                <div className="image__recipient">
-                  <img src={message.content} alt="image" width="100%" height="100%"/>
-                </div>
-              </div>
+                message.from === recepient.userID ? (
+                  <div className="message__chats" key={index}>
+                  <p>{recepient.userName}</p>
+                  <div className="image__recipient">
+                    <img src={message.content} alt="image" width="100%" height="100%"/>
+                  </div>
+                  </div>
+                ) : (<></>)
               )
             ) : (
               message.from === socket.userID && message.to === recepient.userID ? (
