@@ -10,8 +10,8 @@ export default function Login({ socket }) {
     const [errMsgs, setErrMsgs] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { setAuthenticated } = useContext(authContext);
-    var userName = ""
-    var password= ""
+    let userName = ""
+    let password= ""
     const err = {
         username: "Invalid username! Please enter a correct username.",
         password: "Invalid password! Please enter the correct password."

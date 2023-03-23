@@ -10,7 +10,7 @@ const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, s
   useEffect(() => {
 
     socket.on('refresh', () => {
-      var agent = sessionStorage.getItem("userName");
+      let agent = sessionStorage.getItem("userName");
       //  alert(agent);
         UserService.getCustomerList(agent).then(() => {}, error => {
           console.log ("Unable to get list of customers for some reason.");
