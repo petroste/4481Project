@@ -5,16 +5,16 @@ import ChatFooter from '../chat/ChatFooter';
 import "../chat/chat.css"
 import UserService from '../authentication/user.service';
 
-const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, setUsers}) => {
+const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, setUsers }) => {
 
   useEffect(() => {
 
     socket.on('refresh', () => {
       let agent = sessionStorage.getItem("userName");
       //  alert(agent);
-        UserService.getCustomerList(agent).then(() => {}, error => {
-          console.log ("Unable to get list of customers for some reason.");
-        });
+      UserService.getCustomerList(agent).then(() => { }, error => {
+        console.log("Unable to get list of customers for some reason.");
+      });
     });
 
     socket.on('message', (message) => {
@@ -46,6 +46,7 @@ const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, s
     setUsers(users)
     setMessages([...messages, message])
   });
+
 
   return (
     <div className="chat">

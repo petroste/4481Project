@@ -10,10 +10,10 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
   const handleLeaveChat = () => {
     sessionStorage.removeItem('userID');
     //If user is authenticated or not handle leaving the chat differently.
-    if(authenticated && recepient.userName !== null){
+    if (authenticated && recepient.userName !== null) {
       sessionStorage.removeItem(recepient.userName);
     }
-    else{
+    else {
       //User user is not authenticated so stop
       sessionStorage.clear();
       socket.disconnect();
@@ -27,11 +27,11 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
         <button className="leaveChat__btn" onClick={handleLeaveChat}>
           LEAVE CHAT
         </button>
-          <h1 className="user_name">{recepient.userName}</h1> 
+        <h1 className="user_name">{recepient.userName}</h1>
       </header>
 
       <div className="message__container">
-      {recepient.userName !== null && sessionStorage.getItem("agentToConnect") !== null ? (
+        {/* {recepient.userName !== null && sessionStorage.getItem("agentToConnect") !== null ? (
                   <div className="message__chats">
                   <p>{recepient.userName}</p>
                   <div className="message__recipient"> 
@@ -39,41 +39,41 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
                   Please click the blue button on your left with my name to open our chat, then type your issue below and I will respond as soon as possible!</p> 
                   </div>
                   </div>
-      ): (<></>)}
+      ): (<></>)} */}
 
         {messages.map((message, index) => (
           message.type === "file" ? (
             message.from === socket.userID && message.to === recepient.userID ? (
               <div className="message__chats" key={index}>
-              <p className="sender__name">You</p>
-              <div className="image__sender">
-                <iframe src={message.content} alt="image" width="100%" height="800"/>
+                <p className="sender__name">You</p>
+                <div className="image__sender">
+                  <iframe src={message.content} alt="image" width="100%" height="800" />
+                </div>
               </div>
-            </div>
             ) : (
               <div className="message__chats" key={index}>
-              <p>{recepient.userName}</p>
-              <div className="image__recipient">
-                <iframe src={message.content} alt="image" width="100%" height="800"/>
+                <p>{recepient.userName}</p>
+                <div className="image__recipient">
+                  <iframe src={message.content} alt="image" width="100%" height="800" />
+                </div>
               </div>
-            </div>
             )
           ) : (
             message.type === "image" ? (
               message.from === socket.userID && message.to === recepient.userID ? (
                 <div className="message__chats" key={index}>
-                <p className="sender__name">You</p>
-                <div className="image__sender">
-                  <img src={message.content} alt="image" width="100%" height="100%"/>
+                  <p className="sender__name">You</p>
+                  <div className="image__sender">
+                    <img src={message.content} alt="image" width="100%" height="100%" />
+                  </div>
                 </div>
-              </div>
               ) : (
                 <div className="message__chats" key={index}>
-                <p>{recepient.userName}</p>
-                <div className="image__recipient">
-                  <img src={message.content} alt="image" width="100%" height="100%"/>
+                  <p>{recepient.userName}</p>
+                  <div className="image__recipient">
+                    <img src={message.content} alt="image" width="100%" height="100%" />
+                  </div>
                 </div>
-              </div>
               )
             ) : (
               message.from === socket.userID && message.to === recepient.userID ? (
@@ -86,15 +86,15 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
               ) : (
                 message.from === recepient.userID && message.type === undefined ? (
                   <div className="message__chats" key={index}>
-                  <p>{recepient.userName}</p>
-                  <div className="message__recipient">
-                    <p>{message.content}</p>
+                    <p>{recepient.userName}</p>
+                    <div className="message__recipient">
+                      <p>{message.content}</p>
+                    </div>
                   </div>
-                </div>
                 ) : (<></>)
               )
             )
-          ) 
+          )
         ))}
       </div>
     </>

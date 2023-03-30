@@ -63,10 +63,9 @@ function socket(http) {
             role: socket.role
         });
 
-        if (socket.role == "Agent")
-        {
+        if (socket.role == "Agent") {
             authenticatedUsers.set(socket.userName, []);
-            console.log (Array.from(authenticatedUsers.values()));
+            console.log(Array.from(authenticatedUsers.values()));
         }
 
         // join the userID room
@@ -126,17 +125,17 @@ function socket(http) {
 
         socket.on("upload", ({ data, from, to }) => {
             fs.writeFile(
-              "upload/" + "test.png",
-              data,
-              { encoding: "base64" },
-              (err) => {
-                if (err) {
-                  console.log("Error writing file:", err);
-                  return;
+                "upload/" + "test.png",
+                data,
+                { encoding: "base64" },
+                (err) => {
+                    if (err) {
+                        console.log("Error writing file:", err);
+                        return;
+                    }
                 }
-              }
             );
-            
+
             const message = {
                 content: data.toString("base64"),
                 from: socket.userID,
@@ -144,21 +143,20 @@ function socket(http) {
                 type: "file",
             };
 
-            if(data.startsWith("data:image/jpeg") || data.startsWith("data:image/png")){
+            if (data.startsWith("data:image/jpeg") || data.startsWith("data:image/png")) {
                 message.type = "image";
-              }
-        
+            }
+
             socket.to(to).to(socket.userID).emit("confirmUpload", message);
 
-          });
-        
+        });
+
 
         socket.on('disconnect', async () => {
             const matchingSockets = await socketIO.in(socket.userID).allSockets();
             const isDisconnected = matchingSockets.size === 0;
             console.log('🔥: A user disconnected');
-            if (socket.role == "Agent")
-            {
+            if (socket.role == "Agent") {
                 users.pop(socket.userID);
                 console.log(users);
                 socket.emit("users", users);
@@ -169,8 +167,8 @@ function socket(http) {
             if (isDisconnected) {
                 // Remove user from all rooms
                 matchingSockets.forEach((socket) => {
-                     socket.leaveAll();
-                 });
+                    socket.leaveAll();
+                });
                 // Remove user's session from session store
                 sessionStore.removeSession(socket.sessionID);
                 // notify other users

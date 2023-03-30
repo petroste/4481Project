@@ -2,6 +2,8 @@ import axios from "axios";
 
 const API_URL = "http://localhost:4000/";
 
+
+
 //Handles http requests involving the user tokens.
 class AuthService {
   login(username, password) {
@@ -22,17 +24,19 @@ class AuthService {
       });
   }
 
+
+
   logout(username) {
     sessionStorage.removeItem("user");
   }
 
- // register(username, email, password) {
- //   return axios.post(API_URL + "signup", {
- //     username,
- //     email,
- //     password
- //   });
- //  }
+  // register(username, email, password) {
+  //   return axios.post(API_URL + "signup", {
+  //     username,
+  //     email,
+  //     password
+  //   });
+  //  }
 
   getCurrentUser() {
     return JSON.parse(sessionStorage.getItem('user'));;
