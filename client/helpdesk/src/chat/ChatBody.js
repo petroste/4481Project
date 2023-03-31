@@ -2,24 +2,31 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authContext from '../authContext';
 import "./chat.css"
+import { V0alpha2Api, FrontendApi, Configuration, Session, Identity } from "@ory/client"
 
-const ChatBody = ({ socket, messages, recepient, userName }) => {
+
+const basePath = "http://localhost:8080"
+const ory = new FrontendApi(
+  new Configuration({
+    basePath,
+    baseOptions: {
+      withCredentials: true,
+    },
+  }),
+)
+const ChatBody = ({ socket, messages, recepient }) => {
   const navigate = useNavigate();
   const { authenticated } = useContext(authContext);
 
-  const handleLeaveChat = () => {
-    sessionStorage.removeItem('userID');
-    //If user is authenticated or not handle leaving the chat differently.
-    if (authenticated && recepient.userName !== null) {
-      sessionStorage.removeItem(recepient.userName);
-    }
-    else {
-      //User user is not authenticated so stop
-      sessionStorage.clear();
-      socket.disconnect();
-      navigate('/home')
-    }
-  };
+  const handleLeaveChat = async () => {
+    const logoutToken = localStorage.getItem('logout_token')
+    sessionStorage.clear();
+    localStorage.clear();
+    socket.disconnect();
+    await ory.updateLogoutFlow({
+      token: logoutToken,
+    }).then(() => navigate('/home'))
+  }
 
   return (
     <>
@@ -100,5 +107,4 @@ const ChatBody = ({ socket, messages, recepient, userName }) => {
     </>
   );
 };
-
 export default ChatBody;

@@ -5,7 +5,7 @@ import '../components/login.css';
 import roles from '../enums';
 import AuthService from "../authentication/auth.service";
 import { V0alpha2Api, FrontendApi, Configuration, Session, Identity } from "@ory/client"
-
+import userContext from '../userContext';
 // Get your Ory url from .env
 // Or localhost for local development
 const basePath = "http://localhost:8080"
@@ -25,6 +25,7 @@ export default function Login({ socket }) {
     const { setAuthenticated } = useContext(authContext);
     const [session, setSession] = useState()
     const [logoutUrl, setLogoutUrl] = useState("")
+    const { user, setUser } = useContext(userContext);
     let userName = ""
     let password = ""
     const err = {
@@ -51,20 +52,11 @@ export default function Login({ socket }) {
     const handleLogin = (identity) => {
         setIsSubmitted(true);
         setAuthenticated(true);
-        socket.auth = { userName: identity.traits.username, role: roles.AGENT }
-        socket.connect();
-        socket.on("session", ({ sessionID, userID, role }) => {
-            // attach the session ID to the next reconnection attempts
-            socket.auth = { sessionID };
-            // store it in the localStorage
-            sessionStorage.setItem("sessionID", sessionID);
-            sessionStorage.setItem("userID", socket.userID);
-            sessionStorage.setItem("userName", identity.traits.username);
-            // save the ID of the user
-            socket.userID = userID;
-            socket.role = role;
-        });
-
+        const user = {
+            userName: identity.traits.username,
+            role: roles.AGENT
+        }
+        setUser(user)
         navigate("/tempchat");
     }
 
@@ -78,7 +70,7 @@ export default function Login({ socket }) {
                 ory.createBrowserLogoutFlow().then(({ data }) => {
                     // Get also the logout url
                     setLogoutUrl(data.logout_url)
-
+                    localStorage.setItem("logout_token", data.logout_token)
                 }).then(() => {
                     handleLogin(session.identity)
                 })

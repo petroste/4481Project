@@ -16,6 +16,7 @@ class InMemorySessionStore extends SessionStore {
     }
 
     saveSession(id, session) {
+        console.log(`saving session with id: ${id} \n session: ${JSON.stringify(session)}`)
         this.sessions.set(id, session);
     }
 
@@ -23,7 +24,7 @@ class InMemorySessionStore extends SessionStore {
         return [...this.sessions.values()];
     }
 
-    removeSession(id){
+    removeSession(id) {
         this.sessions.delete(id);
     }
 }

@@ -9,6 +9,7 @@ import Switch from './pages/switch.js';
 import './App.css';
 import authContext from "./authContext";
 import socket from './sockets/index.js';
+import userContext from './userContext.js';
 
 
 function App() {
@@ -16,9 +17,11 @@ function App() {
   const [users, setUsers] = useState([]);
   const [recepient, setRecepient] = useState({});
   const [messages, setMessages] = useState([]);
+  const [user, setUser] = useState({});
   return (
     <div className='navbar-main'>
-      <authContext.Provider value={{ authenticated, setAuthenticated }} >
+      <userContext.Provider value={{ user, setUser }}>
+        {/* <authContext.Provider value={{ authenticated, setAuthenticated }} > */}
         <BrowserRouter>
           <Navbar />
           <Routes>
@@ -29,7 +32,8 @@ function App() {
             <Route path='/tempchat' element={<Chat socket={socket} recepient={recepient} setRecepient={setRecepient} messages={messages} setMessages={setMessages} users={users} setUsers={setUsers} />} />
           </Routes>
         </BrowserRouter>
-      </authContext.Provider>
+        {/* </authContext.Provider> */}
+      </userContext.Provider>
     </div>
   );
 }

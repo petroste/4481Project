@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserService from '../authentication/user.service';
 import roles from '../enums';
 import { FrontendApi, Configuration, Session, Identity, } from "@ory/client"
 import axios from 'axios';
+import userContext from '../userContext';
 
 // Get your Ory url from .env
 // Or localhost for local development
@@ -28,6 +29,7 @@ export default function Home({ socket }) {
   const [logoutUrl, setLogoutUrl] = useState("")
   const [clientUser, setClientUser] = useState("")
   const [flow, setFlow] = useState()
+  const { user, setUser } = useContext(userContext);
   useEffect(() => {
     //Authenticate the user
     ory
@@ -62,6 +64,7 @@ export default function Home({ socket }) {
         ory.createBrowserLogoutFlow().then(({ data }) => {
           // Get also the logout url
           setLogoutUrl(data.logout_url)
+          localStorage.setItem("logout_token", data.logout_token)
         })
       })
 
@@ -99,34 +102,33 @@ export default function Home({ socket }) {
     // // .catch((err) => console.log(err))
   }
 
-  const connectToAgent = () => {
-    UserService.getAgentToConnect(clientUser).then(() => {
-      socket.auth = { userName: clientUser, role: roles.CUSTOMER }
-      socket.connect();
-      socket.on("session", ({ sessionID, userID, role }) => {
-        // attach the session ID to the next reconnection attempts
-        socket.auth = { sessionID };
-        // store it in the localStorage
-        sessionStorage.setItem("sessionID", sessionID);
-        sessionStorage.setItem("userID", socket.userID);
-        sessionStorage.setItem("agentToConnect", sessionStorage.getItem("agent"));
-        sessionStorage.setItem("userName", clientUser);
-        // save the ID of the user
-        socket.userID = userID;
-        socket.role = role;
-      });
-      navigate('/tempchat');
-    },
-      error => {
-        alert("There are no active agents currently, please try again later.");
-      });
-  }
+  // const connectToAgent = () => {
+  //   UserService.getAgentToConnect(userName).then(() => {
+  //     socket.auth = { userName: userName, role: roles.CUSTOMER }
+  //     socket.connect();
+  //     socket.on("session", ({ sessionID, userID, role }) => {
+  //       // attach the session ID to the next reconnection attempts
+  //       socket.auth = { sessionID };
+  //       // store it in the localStorage
+  //       sessionStorage.setItem("sessionID", sessionID);
+  //       sessionStorage.setItem("userID", socket.userID);
+  //       sessionStorage.setItem("agentToConnect", sessionStorage.getItem("agent"));
+  //       sessionStorage.setItem("userName", userName);
+  //       // save the ID of the user
+  //       socket.userID = userID;
+  //       socket.role = role;
+  //     });
+  //   },
+  //     error => {
+  //       alert("There are no active agents currently, please try again later.");
+  //     });
+  // }
 
   const handleSubmit = (e) => {
     if (!session)
       initClientSession()
     e.preventDefault();
-    connectToAgent()
+    navigate('/tempchat');
   };
 
   const setIssue = (value) => {
@@ -134,7 +136,11 @@ export default function Home({ socket }) {
   }
   const setUserName = (value) => {
     userName = value
-    setClientUser(value)
+    const user = {
+      userName: value,
+      role: roles.CUSTOMER
+    }
+    setUser(user)
   }
   if (!session) {
     return (
@@ -159,6 +165,6 @@ export default function Home({ socket }) {
       </>
     );
   } else {
-    return connectToAgent()
+    navigate('/tempchat')
   }
 };

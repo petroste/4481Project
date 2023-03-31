@@ -16,19 +16,22 @@ function socket(http) {
     });
 
     // middleware
-    socketIO.use((socket, next) => {
+    socketIO.use(async (socket, next) => {
         const sessionID = socket.handshake.auth.sessionID;
         if (sessionID) {
             // find existing session
-            const session = sessionStore.findSession(sessionID);
+            const session = await sessionStore.findSession(sessionID);
 
             if (session) {
+                console.log("found existing session: " + JSON.stringify(session))
                 socket.sessionID = sessionID;
                 socket.userID = session.userID;
-                socket.username = session.username;
+                socket.userName = session.userName;
+                socket.role = session.role;
                 return next();
             }
         }
+        console.log("Creating new session for " + socket.handshake.auth.userName)
         const userName = socket.handshake.auth.userName;
         const role = socket.handshake.auth.role;
         if (!userName) {
@@ -36,12 +39,12 @@ function socket(http) {
         }
         // create new session
         const newSession = {
+            id: randomId(),
             userID: randomId(),
             userName: userName,
             role: role
         }
-        const newSessionID = randomId()
-        socket.sessionID = newSessionID
+        socket.sessionID = newSession.id
         socket.userID = newSession.userID
         socket.userName = newSession.userName
         socket.role = newSession.role
@@ -55,12 +58,14 @@ function socket(http) {
             userID: socket.userID,
             userName: socket.userName,
             role: socket.role,
+            connected: true,
         });
 
         socket.emit("session", {
             sessionID: socket.sessionID,
             userID: socket.userID,
-            role: socket.role
+            role: socket.role,
+            userName: socket.userName
         });
 
         if (socket.role == "Agent") {
@@ -93,15 +98,23 @@ function socket(http) {
                 userID: session.userID,
                 userName: session.userName,
                 role: session.role,
-                messages: messagesPerUser.get(session.userID) || []
+                messages: messagesPerUser.get(session.userID) || [],
+                connected: session.connected
             });
         })
 
 
         socket.emit("users", users);
+        socket.broadcast.emit("users", users)
 
         // notify existing users
-        socket.broadcast.emit("users", users);
+        // socket.broadcast.emit("user connected", {
+        //     userID: socket.userID,
+        //     userName: socket.userName,
+        //     role: socket.role,
+        //     messages: [],
+        //     connected: true,
+        // });
 
         socket.emit("refresh");
         socket.broadcast.emit("refresh");
@@ -151,30 +164,46 @@ function socket(http) {
 
         });
 
-
-        socket.on('disconnect', async () => {
+        // notify users upon disconnection
+        socket.on("disconnect", async () => {
             const matchingSockets = await socketIO.in(socket.userID).allSockets();
             const isDisconnected = matchingSockets.size === 0;
-            console.log('🔥: A user disconnected');
-            if (socket.role == "Agent") {
-                users.pop(socket.userID);
-                console.log(users);
-                socket.emit("users", users);
-                socket.broadcast.emit("users", users);
-
-                authenticatedUsers.delete(socket.userName);
-            }
             if (isDisconnected) {
-                // Remove user from all rooms
-                matchingSockets.forEach((socket) => {
-                    socket.leaveAll();
-                });
-                // Remove user's session from session store
-                sessionStore.removeSession(socket.sessionID);
                 // notify other users
                 socket.broadcast.emit("user disconnected", socket.userID);
+                // update the connection status of the session
+                sessionStore.saveSession(socket.sessionID, {
+                    userID: socket.userID,
+                    userName: socket.userName,
+                    role: socket.role,
+                    connected: false,
+                });
             }
         });
+
+        // socket.on('disconnect', async () => {
+        //     const matchingSockets = await socketIO.in(socket.userID).allSockets();
+        //     const isDisconnected = matchingSockets.size === 0;
+        //     console.log('🔥: A user disconnected');
+        //     if (socket.role == "Agent") {
+        //         users.pop(socket.userID);
+        //         console.log(users);
+        //         socket.emit("users", users);
+        //         socket.broadcast.emit("users", users);
+
+        //         authenticatedUsers.delete(socket.userName);
+        //     }
+        //     if (isDisconnected) {
+        //         // Remove user from all rooms
+        //         matchingSockets.forEach((socket) => {
+        //             socket.leaveAll();
+        //         });
+        //         // Remove user's session from session store
+        //         sessionStore.removeSession(socket.sessionID);
+        //         // notify other users
+        //         socket.broadcast.emit("user disconnected", socket.userID);
+        //     }
+        // });
     });
 
 }
