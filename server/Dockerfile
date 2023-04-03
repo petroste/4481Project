@@ -12,7 +12,7 @@ COPY . .
 
 EXPOSE 9600
 
-ARG ATLAS_URI
+# ARG ATLAS_URI
 
 # Run node
 CMD ["node", "server.js"]
