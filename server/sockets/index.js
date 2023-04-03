@@ -10,7 +10,7 @@ const authenticatedUsers = new Map();
 function socket(http) {
     const socketIO = require('socket.io')(http, {
         cors: {
-            origin: "http://localhost:3000"
+            origin: "https://helpdesk.sidharth.me/"
         },
         maxHttpBufferSize: 1e8 // 100 MB
     });
@@ -132,7 +132,7 @@ function socket(http) {
                 from: socket.userID,
                 to,
             }
-            socket.to(to).to(socket.userID).emit('message', message)
+            socket.to(to).to(socket.userID).emit('messageResponse', message)
             messageStore.saveMessage(message);
         });
 

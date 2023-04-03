@@ -5,20 +5,7 @@ import roles from '../enums';
 import { FrontendApi, Configuration, Session, Identity, } from "@ory/client"
 import axios from 'axios';
 import userContext from '../userContext';
-
-// Get your Ory url from .env
-// Or localhost for local development
-const basePath = "http://localhost:8080"
-const ory = new FrontendApi(
-  new Configuration({
-    basePath,
-    baseOptions: {
-      withCredentials: true,
-    },
-  }),
-)
-
-
+import ory from '../authentication/auth-client'
 
 export default function Home({ socket }) {
   const navigate = useNavigate();

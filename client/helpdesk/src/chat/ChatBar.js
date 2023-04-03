@@ -5,7 +5,7 @@ import "./chat.css"
 import useSessionStorage from '../auxiliary/sessionHelper';
 import userContext from '../userContext';
 
-const ChatBar = ({ socket, user, users, setUsers, setRecepient }) => {
+const ChatBar = ({ socket, user, users, setUsers, setRecepient, recepient, setMessages }) => {
   const navigate = useNavigate();
   const [value, setValue] = useSessionStorage('a', 'b');
   let agentToConnect = sessionStorage.getItem("agentToConnect");
@@ -16,6 +16,7 @@ const ChatBar = ({ socket, user, users, setUsers, setRecepient }) => {
   useEffect(() => {
     socket.on('users', (currentUsers) => {
       currentUsers.forEach((u) => {
+        console.log(JSON.stringify(u))
         u.messages.forEach((message) => {
           message.fromSelf = message.from === socket.userID;
         });
@@ -28,6 +29,9 @@ const ChatBar = ({ socket, user, users, setUsers, setRecepient }) => {
           }
         }
         u.self = u.userID === socket.userID;
+        if (recepient.userID)
+          if (u.userID === recepient.userID)
+            setMessages(u.messages)
         initReactiveProperties(u);
       });
       const sortedUsers = currentUsers.sort((a, b) => {
@@ -54,16 +58,16 @@ const ChatBar = ({ socket, user, users, setUsers, setRecepient }) => {
       });
       setUsers(users)
     });
-    // socket.on("user connected", (user) => {
+    // socket.on("user connected", (u) => {
     //   for (let i = 0; i < users.length; i++) {
     //     const existingUser = users[i];
-    //     if (existingUser.userID === user.userID) {
+    //     if (existingUser.userID === u.userID) {
     //       existingUser.connected = true;
     //       return;
     //     }
     //   }
-    //   initReactiveProperties(user);
-    //   users.push(user);
+    //   initReactiveProperties(u);
+    //   users.push(u);
     //   setUsers(users);
     // });
     socket.on("user disconnected", (id) => {
@@ -128,16 +132,14 @@ const ChatBar = ({ socket, user, users, setUsers, setRecepient }) => {
 
 
   if (user.role === roles.AGENT) {
-    console.log(user)
     return (
       <div className="chat__sidebar">
         <h2>Help Desk Chat</h2>
         <div>
           {(<h4 className="chat__header">Active Clients</h4>)}
           <div className="chat__users">
-            {users.map(u => console.log(JSON.stringify(u)))}
             {users.map(u => (u.role === roles.CUSTOMER) ?
-              (<button className='chat__button' onClick={(e) => { handleClick(e); handleRecepient(u); }} key={u.userID}>{u.userName} | {u.role}</button>) : (<></>)
+              (<button className='chat__button' onClick={(e) => { handleClick(e); handleRecepient(u); }} key={u.userID}>{u.userName} | {u.connected.toString()}</button>) : (<></>)
             )}
           </div>
         </div>
@@ -145,7 +147,7 @@ const ChatBar = ({ socket, user, users, setUsers, setRecepient }) => {
           {(<h4 className="chat__header">Active Agents</h4>)}
           <div className="chat__users">
             {users.map(u => (u.userName !== user.userName && u.role === roles.AGENT) ?
-              (<button className='chat__button' onClick={(e) => { handleClick(e); handleRecepient(u); }} key={u.userID}>{u.userName} | {u.role}</button>) : (<></>)
+              (<button className='chat__button' onClick={(e) => { handleClick(e); handleRecepient(u); }} key={u.userID}>{u.userName} | {u.connected.toString()}</button>) : (<></>)
             )}
           </div>
         </div>
@@ -153,24 +155,20 @@ const ChatBar = ({ socket, user, users, setUsers, setRecepient }) => {
     );
   }
   else if (user.role === roles.CUSTOMER) {
-    console.log(user)
     return (
       <div className="chat__sidebar">
         <h2>Help Desk Chat</h2>
         <div>
-          {(<h4 className="chat__header">Active Agents</h4>)}
+          {(<h4 className="chat__header">Active Agent</h4>)}
           <div className="chat__users">
-
-            {users.map(u => console.log(JSON.stringify(u)))}
-            {users.map(u => (u.role === roles.AGENT) ?
-              (<button className='chat__button' onClick={(e) => { handleClick(e); handleRecepient(u); }} key={u.userID}>{u.userName} | {u.role}</button>) : (<></>)
+            {console.log(JSON.stringify(agentToConnect))}
+            {users.map(u => (u.role === roles.AGENT && u.userName === `${agentToConnect}`) ?
+              (<button className='chat__button' onClick={(e) => { handleClick(e); handleRecepient(u); }} key={u.userID}>{u.userName} | {u.connected.toString()}</button>) : (<></>)
             )}
           </div>
         </div>
       </div>
     );
-  } else {
-    console.log(`bamboozled: \n ${JSON.stringify(user)}`)
   }
 };
 

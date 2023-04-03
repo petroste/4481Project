@@ -1,30 +1,33 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import authContext from '../authContext';
 import "./chat.css"
-import { V0alpha2Api, FrontendApi, Configuration, Session, Identity } from "@ory/client"
+import ory from '../authentication/auth-client'
 
-
-const basePath = "http://localhost:8080"
-const ory = new FrontendApi(
-  new Configuration({
-    basePath,
-    baseOptions: {
-      withCredentials: true,
-    },
-  }),
-)
-const ChatBody = ({ socket, messages, recepient }) => {
+const ChatBody = ({ socket, users, user, recepient, messages, setMessages }) => {
   const navigate = useNavigate();
   const { authenticated } = useContext(authContext);
-
+  useEffect(() => {
+    if (recepient.userID)
+      users.forEach(u => {
+        // if (u.userID === recepient.userID) {
+        // u.messages.forEach(m =>
+        // setMessages([...messages, m])
+        // )
+        // setMessages(u.messages)
+        //
+        // console.log(JSON.stringify(u.messages))
+        // setMessages(u.messages)
+        // }
+      })
+  }, [messages])
   const handleLeaveChat = async () => {
     const logoutToken = localStorage.getItem('logout_token')
     sessionStorage.clear();
     localStorage.clear();
     socket.disconnect();
     await ory.updateLogoutFlow({
-      token: logoutToken,
+      token: logoutToken
     }).then(() => navigate('/home'))
   }
 
@@ -34,77 +37,74 @@ const ChatBody = ({ socket, messages, recepient }) => {
         <button className="leaveChat__btn" onClick={handleLeaveChat}>
           LEAVE CHAT
         </button>
-        <h1 className="user_name">{recepient.userName}</h1>
       </header>
+      {(!recepient.userName) ? (
+        <div className='page'>
+          <div className='login-page'>
+            <h2>Welcome to Help Desk Chat. Select a user to communicate with.</h2>
+          </div>
+        </div>
+      ) : (
 
-      <div className="message__container">
-        {/* {recepient.userName !== null && sessionStorage.getItem("agentToConnect") !== null ? (
-                  <div className="message__chats">
-                  <p>{recepient.userName}</p>
-                  <div className="message__recipient"> 
-                  <p>Hello my name is, {sessionStorage.getItem("agentToConnect")}. I am the agent that will be taking care of your issue. 
-                  Please click the blue button on your left with my name to open our chat, then type your issue below and I will respond as soon as possible!</p> 
-                  </div>
-                  </div>
-      ): (<></>)} */}
-
-        {messages.map((message, index) => (
-          message.type === "file" ? (
-            message.from === socket.userID && message.to === recepient.userID ? (
-              <div className="message__chats" key={index}>
-                <p className="sender__name">You</p>
-                <div className="image__sender">
-                  <iframe src={message.content} alt="image" width="100%" height="800" />
-                </div>
-              </div>
-            ) : (
-              <div className="message__chats" key={index}>
-                <p>{recepient.userName}</p>
-                <div className="image__recipient">
-                  <iframe src={message.content} alt="image" width="100%" height="800" />
-                </div>
-              </div>
-            )
-          ) : (
-            message.type === "image" ? (
+        <div className="message__container">
+          {messages.map((message, index) => (
+            message.type === "file" ? (
               message.from === socket.userID && message.to === recepient.userID ? (
                 <div className="message__chats" key={index}>
                   <p className="sender__name">You</p>
                   <div className="image__sender">
-                    <img src={message.content} alt="image" width="100%" height="100%" />
+                    <iframe src={message.content} alt="image" width="100%" height="800" />
                   </div>
                 </div>
               ) : (
                 <div className="message__chats" key={index}>
                   <p>{recepient.userName}</p>
                   <div className="image__recipient">
-                    <img src={message.content} alt="image" width="100%" height="100%" />
+                    <iframe src={message.content} alt="image" width="100%" height="800" />
                   </div>
                 </div>
               )
             ) : (
-              message.from === socket.userID && message.to === recepient.userID ? (
-                <div className="message__chats" key={index}>
-                  <p className="sender__name">You</p>
-                  <div className="message__sender">
-                    <p>{message.content}</p>
+              message.type === "image" ? (
+                message.from === socket.userID && message.to === recepient.userID ? (
+                  <div className="message__chats" key={index}>
+                    <p className="sender__name">You</p>
+                    <div className="image__sender">
+                      <img src={message.content} alt="image" width="100%" height="100%" />
+                    </div>
                   </div>
-                </div>
-              ) : (
-                message.from === recepient.userID && message.type === undefined ? (
+                ) : (
                   <div className="message__chats" key={index}>
                     <p>{recepient.userName}</p>
-                    <div className="message__recipient">
+                    <div className="image__recipient">
+                      <img src={message.content} alt="image" width="100%" height="100%" />
+                    </div>
+                  </div>
+                )
+              ) : (
+                message.from === socket.userID && message.to === recepient.userID ? (
+                  <div className="message__chats" key={index}>
+                    <p className="sender__name">You</p>
+                    <div className="message__sender">
                       <p>{message.content}</p>
                     </div>
                   </div>
-                ) : (<></>)
+                ) : (
+                  message.from === recepient.userID && message.type === undefined ? (
+                    <div className="message__chats" key={index}>
+                      <p>{recepient.userName}</p>
+                      <div className="message__recipient">
+                        <p>{message.content}</p>
+                      </div>
+                    </div>
+                  ) : (<></>)
+                )
               )
             )
-          )
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </>
   );
-};
+}
 export default ChatBody;

@@ -4,20 +4,8 @@ import authContext from '../authContext';
 import '../components/login.css';
 import roles from '../enums';
 import AuthService from "../authentication/auth.service";
-import { V0alpha2Api, FrontendApi, Configuration, Session, Identity } from "@ory/client"
+import ory from '../authentication/auth-client'
 import userContext from '../userContext';
-// Get your Ory url from .env
-// Or localhost for local development
-const basePath = "http://localhost:8080"
-const ory = new FrontendApi(
-    new Configuration({
-        basePath,
-        baseOptions: {
-            withCredentials: true,
-        },
-    }),
-)
-
 export default function Login({ socket }) {
     const navigate = useNavigate();
     const [errMsgs, setErrMsgs] = useState({});

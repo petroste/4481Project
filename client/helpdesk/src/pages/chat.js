@@ -36,7 +36,8 @@ const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, s
       }
       if (socket.role === roles.CUSTOMER) {
         UserService.getAgentToConnect(currentUser.userName).then(() => {
-          sessionStorage.setItem("agentToConnect", sessionStorage.getItem("agent"));
+
+          sessionStorage.setItem("agentToConnect", sessionStorage.getItem("agent").substring(1, sessionStorage.getItem("agent").length - 1));
         })
       }
       setUser(currentUser)
@@ -53,11 +54,19 @@ const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, s
     //   });
     // });
 
-    socket.on('message', (message) => {
-      users.forEach((user) => {
+    socket.on('messageResponse', (message) => {
+      // console.log(`current users in chat.js: \n ${JSON.stringify(users)}}`)
+      users.forEach((u) => {
+        // if (message.f=== socket.userID && u.userID === socket.userID) {
+        //   u.messages.push({
+        //     content: message.content,
+        //     fromSelf: false
+        //   });
+
+        // }
         const fromSelf = socket.userID === message.from
-        if (user.userID === (fromSelf ? message.to : message.from)) {
-          user.messages.push({
+        if (u.userID === (fromSelf ? message.to : message.from)) {
+          u.messages.push({
             content: message.content,
             fromSelf
           });
@@ -69,10 +78,10 @@ const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, s
   }, [socket, messages, users]);
 
   socket.on("confirmUpload", (message) => {
-    users.forEach((user) => {
+    users.forEach((u) => {
       const fromSelf = socket.userID === message.from
-      if (user.userID === (fromSelf ? message.to : message.from)) {
-        user.messages.push({
+      if (u.userID === (fromSelf ? message.to : message.from)) {
+        u.messages.push({
           content: message.content,
           fromSelf,
           type: "file"
@@ -86,9 +95,9 @@ const Chat = ({ socket, recepient, setRecepient, messages, setMessages, users, s
 
   return (
     <div className="chat">
-      <ChatBar socket={socket} user={user} users={users} setUsers={setUsers} setRecepient={setRecepient} />
+      <ChatBar socket={socket} user={user} users={users} setUsers={setUsers} setRecepient={setRecepient} recepient={recepient} setMessages={setMessages} />
       <div className="chat__main">
-        <ChatBody socket={socket} messages={messages} recepient={recepient} />
+        <ChatBody socket={socket} users={users} recepient={recepient} messages={messages} setMessages={setMessages} />
         <ChatFooter socket={socket} recepient={recepient} users={users} setUsers={setUsers} messages={messages} setMessages={setMessages} />
       </div>
     </div>

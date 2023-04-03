@@ -8,12 +8,12 @@ require('dotenv').config();
 const app = express();
 const http = require('http').Server(app);
 
-//var corsOptions = {
-//    origin: "http://localhost:8081"
-//  };
+var corsOptions = {
+    origin: "https://helpdesk.sidharth.me/"
+};
 const port = process.env.PORT || 4000;
 
-//app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
