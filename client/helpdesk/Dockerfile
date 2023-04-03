@@ -12,6 +12,6 @@ RUN npm install
 RUN npm run build
 # ==== RUN =======
 # Expose the port on which the app will be running (3000 is the default that `serve` uses)
-EXPOSE 9500
+EXPOSE 3000
 # Start the app
-CMD [ "npx", "serve", "build", "--port", "9500" ]
+CMD [ "npx", "serve", "build" ]

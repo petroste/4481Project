@@ -5,7 +5,7 @@ services:
       context: client/helpdesk
       dockerfile: Dockerfile
     ports:
-      - "9500:9500"
+      - "9500:3000"
     # env_file: .env
   server:
     build: 
