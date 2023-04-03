@@ -11,7 +11,7 @@ const http = require('http').Server(app);
 var corsOptions = {
     origin: "https://helpdesk.sidharth.me/"
 };
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 9600;
 
 app.use(cors(corsOptions));
 app.use(cors());

@@ -2,15 +2,15 @@ version: "3"
 services:
   client:
     build: 
-      context: client
-      dockerfile: "./helpdesk/Dockerfile"
+      context: client/helpdesk
+      dockerfile: Dockerfile
     ports:
       - "9500:9500"
     # env_file: .env
   server:
     build: 
       context: server
-      dockerfile: ".server/Dockerfile"
+      dockerfile: Dockerfile
     ports:
       - "9600:9600"
     # env_file: .env
